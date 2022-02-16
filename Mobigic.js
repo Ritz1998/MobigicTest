@@ -1,8 +1,8 @@
- let body = document.querySelector("body")
- let container = document.createElement("div");
- let originalgrid=[]
+let body = document.querySelector("body")
+let container = document.createElement("div");
+let originalgrid = []
 
- let getGrids=[]
+let getGrids = []
 // container.classList="container"
 
 // creating two input fields and appending it to body
@@ -28,21 +28,21 @@ let gridholder = document.createElement("div");
 gridholder.style = ' display:grid; align-items:center; margin:20px ';
 body.appendChild(gridholder);
 
-let searchholder =document.createElement("div")
+let searchholder = document.createElement("div")
 
-searchholder.style='display:inline-block; margin:20px 0;'
+searchholder.style = 'display:inline-block; margin:20px 0;'
 
 //creating search field to search letter inside grids
-let search=document.createElement("input");
-search.setAttribute("type","text");
-search.setAttribute("placeholder","Enter to search word");
-search.style=' border-radius:8px; text-align:center; padding:8px 3px'
+let search = document.createElement("input");
+search.setAttribute("type", "text");
+search.setAttribute("placeholder", "Enter to search word");
+search.style = ' border-radius:8px; text-align:center; padding:8px 3px'
 searchholder.appendChild(search)
 
-let searchbutton=document.createElement("button");
-searchbutton.innerHTML="Search"
-searchbutton.value=search
-searchbutton.style='padding:5px; margin:0 10px; border-radius:5px'
+let searchbutton = document.createElement("button");
+searchbutton.innerHTML = "Search"
+searchbutton.value = search
+searchbutton.style = 'padding:5px; margin:0 10px; border-radius:5px'
 searchholder.appendChild(searchbutton)
 
 
@@ -51,10 +51,17 @@ let button = document.createElement("button");
 button.innerHTML = "Create"
 button.style = 'width:100px; background:#999 ;padding:8px 3px ; font-weight:bold; border-radius:10px ; float:right; margin:20px 0'
 
-searchbutton.addEventListener('click',()=>{
+
+//Fucntion to highlight words
+searchbutton.addEventListener('click', () => {
     // console.log(e.target.value);
+
+//    document.getElementsByClassName("cells").style.color="black"
+
     searchword(search.value)
+    document.getElementby
 })
+
 
 button.addEventListener("click", () => {
 
@@ -71,17 +78,19 @@ button.addEventListener("click", () => {
 
     // console.log(grids);
     for (var i = 0; i < c; i++) {
-        originalgrid[i]=[ ];
-        getGrids[i]=[ ];
+        originalgrid[i] = [];
+        getGrids[i] = [];
         for (var j = 0; j < r; j++) {
             let g = document.createElement("div")
-           let char= alphas.charAt(Math.floor(Math.random() * alphas.length));
+              g.setAttribute("id",i+""+j)
+              g.setAttribute("class","cells")
+            let char = alphas.charAt(Math.floor(Math.random() * alphas.length));
             g.style = 'border: 1px solid black;  display:inline-block ; width:50px;height:50px; text-align:center;line-height:50px;'
-            g.innerHTML =char
+            g.innerHTML = char
             grids.appendChild(g)
-            
-            originalgrid[i][j]=char
-            getGrids[i][j]=g;
+
+            originalgrid[i][j] = char
+            getGrids[i][j] = g;
         }
         grids.appendChild(document.createElement("br"))
     }
@@ -96,84 +105,88 @@ inputContainer.appendChild(columnInput)
 inputContainer.appendChild(button)
 inputContainer.appendChild(searchholder)
 
-
-//creating a function to search a word in grids
-
-function searchword(findword) {
-   
-    let R, C;
-
-    //here i am defining thedirections to search word in grids
-
-    let x = [-1, -1, -1, 0, 0, 1, 1, 1];
-
-    let y = [-1, 0, 1, -1, 1, -1, 0, 1];
-
-    function search2D(grid, row, col, word) {
-      
-        if (grid[row][col] != word[0])
-            return false;
-
-        let len = word.length;
-
-        for (let dir = 0; dir < 8; dir++) {
-            // Initialize starting point
-            // for current direction
-            let k, rd = row + x[dir], cd = col + y[dir];
-            
-            // getGrids[row][col].style.color='green'
-            
-            for (k = 1; k < len; k++) {
-               
-                if (rd >= R || rd < 0 || cd >= C || cd < 0)
-                    break;
-
-                if (grid[rd][cd] != word[k])
-                    break;
-                rd += x[dir];
-                cd += y[dir];
-            }
-           
-            if (k == len){
-            // getGrids[row][col].style.color='red'
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function patternSearch(grid, word) {
-      
-        for (let row = 0; row < R; row++) {
-            for (let col = 0; col < C; col++) {
-                for(let i=0;i<getGrids.length;i++){
-                    getGrids[row][col].style.color='black'
-                    getGrids[row][col].style.background='#fff'
-                }
-                if (search2D(grid, row, col, word)){
-                   console.log(
-                        "pattern found at " + row + ", " + col + "<br>");
-                        for(let i=0;i<getGrids.length;i++){
-                            getGrids[row][col].style.color='white'
-                            getGrids[row][col].style.background='#0c0'
-                        }
-                    }
-            }
-        }
-    }
-
-
-    R = rowInput.value;
+     R = rowInput.value;
     C = columnInput.value;
-    let grid =originalgrid;
+    let grid = originalgrid;
+    console.log(grid)
 
-    patternSearch(grid, findword);
-  
-  
+//Function to get positions of Letters of word
 
+function searchword(word){
+    
+
+//  For horizontal match
+
+let Positions= []
+
+for (let i = 0; i < grid.length; i++) {
+ 
+    let comp = ''
+    for (let j = 0; j < (grid.length - word.length+1 ); j++) {
+       
+        comp = ''
+        for (let k = 0; k < word.length; k++) {
+          console.log(i,j+k);
+          console.log(grid[i][j+k]);
+           comp = comp + grid[i][j + k];
+            if (comp == word) {
+                for (let k = 0; k < word.length; k++) {
+                    Positions.push([i, j + k])
+                    comp = ''
+                }
+            }
+
+        }
+    }
 }
 
 
+//  For vertical match
+for (let i = 0; i < (grid.length - word.length + 1); i++) {
+    for (let j = 0; j <grid.length; j++) {
+        comp = ''
+        for (let k = 0; k < word.length; k++) {
+            comp = comp + grid[i + k][j]
+            if (comp == word) {
+                for (let k = 0; k < word.length; k++) {
 
+                    Positions.push([i + k, j])
+                    comp = ''
+                }
+            }
+
+        }
+    }
+
+}
+
+//  For diagonal match
+for (let i = 0; i < (grid.length - word.length + 1); i++) {
+    comp = ''
+    for (let j = 0; j <(grid.length - word.length + 1); j++) {
+
+        comp = ''
+        for (let k = 0; k < word.length; k++) {
+            comp = comp + grid[i + k][j + k]
+            if (comp == word) {
+                for (let k = 0; k < word.length; k++) {
+                    Positions.push([i + k, j + k])
+                    comp = ''
+
+                }
+            }
+
+        }
+    }
+}
+
+for(let i=0;i<Positions.length;i++){
+    id=Positions[i][0]+""+Positions[i][1]
+    let highlight=document.getElementById(id)
+    highlight.style.color='red'
+   console.log(id);
+}
+
+}
 
 
